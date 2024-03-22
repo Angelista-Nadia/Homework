@@ -3,12 +3,8 @@ public class Main {
         Cat cat = new Cat("Bob");
         Person originalPerson = new Person("Ivan", 30, 89000, cat);
 
-        Person clonedPerson = new Person(originalPerson.getName(),
-                originalPerson.getAge(),
-                originalPerson.getSalary(),
-                originalPerson.getCat());
-
-        clonedPerson.setName("Vasia");
+        Person clonedPerson = originalPerson.clone();
+        clonedPerson.name = "Vasia";
 
         System.out.println("Original Person: " + originalPerson);
         System.out.println("Cloned Person: " + clonedPerson);

@@ -1,45 +1,40 @@
 import java.util.Objects;
 
 public class Person {
-    private String name;
-    private final int age;
-    private final double salary;
-    private final Cat cat;
+    public String name;
+    public int age;
+    public double salary;
+    public Cat cat;
+    private int personCode;
 
     public Person(String name, int age, double salary, Cat cat) {
         this.name = name;
         this.age = age;
         this.salary = salary;
         this.cat = cat;
+        this.personCode = personCode;
     }
 
-    public String getName() {
-        return name;
+    @Override
+    public Person clone() {
+        return new Person(this.name, this.age, this.salary, this.cat);
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public double getSalary() {
-        return salary;
-    }
-
-    public Cat getCat() {
-        return cat;
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Person person = (Person) obj;
+        return personCode == person.personCode;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, age, salary, cat);
+        return personCode;
+    }
 
-    }
-        @Override
-        public String toString () {
+    @Override
+    public String toString () {
             return "Person{name='" + name + "', age=" + age + ", salary=" + salary + ", cat=" + cat + '}';
-        }
     }
+}
