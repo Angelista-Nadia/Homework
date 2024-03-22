@@ -1,3 +1,2 @@
-include 'Hometask88'
-include 'Hometask8a'
-
+rootProject.name = 'Homework'
+include 'Hometask11'
