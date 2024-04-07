@@ -11,7 +11,7 @@ public class Main {
         //Пользователи с задачами больше 2
         List<User> users2Tasks = new ArrayList<>();
         for (User user : users){
-            if (user.getTasks() != null && user.getTasks().size() >2){
+            if  (user.getTasks() != null && user.getTasks().size() >2){
                 users2Tasks.add(user);
             }
         }
@@ -23,12 +23,12 @@ public class Main {
         }
 
         //Пользователи со стажем работы от большего к меньшему
-        Set<User> usersWorkEx = new TreeSet<>(Comparator.comparingInt(User::getWorkEx).reversed());
-        usersWorkEx.addAll(users);
+        Set<User> usersWorkEx = new TreeSet<>(Comparator.comparingInt(User::getWorkEx).reversed()) ;
+        usersWorkEx.addAll(users) ;
 
 
         System.out.println(users2Tasks);
         System.out.println(uniqueUsernames);
-        System.out.println(usersWorkEx);
+        System.out.println(usersWorkEx) ;
     }
 }
