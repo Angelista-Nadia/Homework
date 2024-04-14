@@ -36,7 +36,6 @@ public class Product {
     public String getName() {
         return name;
     }
-
     public List<Store> getStores() {
         return stores;
     }

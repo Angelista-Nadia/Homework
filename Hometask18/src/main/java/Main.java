@@ -1,7 +1,6 @@
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.HashMap;
 import java.util.Map;
 
 
@@ -45,7 +44,7 @@ public class Main {
         // Найти все товары, которые возможно доставить до покупателя
         List<Product> findDelivery = products.stream()
                 .filter(Product::isDelivery)
-                .collect(Collectors.toList());
+                .toList();
 
         System.out.println("Delivery: " + findDelivery);
 
@@ -62,7 +61,7 @@ public class Main {
         List<Product> findManufacturer = products.stream()
                 .filter(product -> product.getManufacturer().stream()
                         .anyMatch(manufacturer -> manufacturer.getName().equals("Sss")))
-                .collect(Collectors.toList());
+                .toList();
 
         System.out.println("Manufacturer Sss: " + findManufacturer);
 
@@ -70,8 +69,8 @@ public class Main {
         List<String> usaManufacturer = products.stream()
                 .flatMap(product -> product.getManufacturer().stream())
                 .filter(manufacturer -> manufacturer.getCountry().equals("USA"))
-                .map(manufacturer -> manufacturer.getName())
-                .collect(Collectors.toList());
+                .map(Manufacturer::getName)
+                .toList();
 
         System.out.println("USA Manufacturers: " + usaManufacturer);
 
@@ -79,34 +78,60 @@ public class Main {
         List<String> storesInMoscow = products.stream()
                 .flatMap(product -> product.getStores().stream())
                 .filter(store -> store.getCity().equals("Moscow"))
-                .map(store -> store.getAddress())
-                .collect(Collectors.toList());
+                .map(Store::getAddress)
+                .toList();
 
         System.out.println("Stores in Moscow:" + storesInMoscow);
 
         // Найти адрес магазина по указанному номеру телефона
-        String phoneNumber = "555-5555";
-
         Store foundStore = products.stream()
                 .flatMap(product -> product.getStores().stream())
-                .filter(store -> store.getPhoneNumber().equals(phoneNumber))
+                .filter(store -> store.getPhoneNumber().equals("555-5555"))
                 .findFirst()
                 .orElse(null);
 
         if (foundStore != null) {
             System.out.println("Store found: " + foundStore.getAddress());
         } else {
-            System.out.println("Store with phone number " + phoneNumber + " not found.");
+            System.out.println("Store with phone number 555-5555 not found.");
         }
 
         // Все товары указанного номера магазина
         List<Product> productsInStore = products.stream()
                 .filter(product -> product.getStores().stream()
                         .anyMatch(store -> store.getNumber() == 1))
-                .collect(Collectors.toList());
+                .toList();
 
         System.out.println("Products of the store number 1: " + productsInStore);
 
         // Составить map где ключ это номер магазина, а значение - это номер телефона данного магазина
+        Map<Integer, String> storePhoneMap = products.stream()
+                .flatMap(product -> product.getStores().stream())
+                .collect(Collectors.toMap(Store::getNumber, Store::getPhoneNumber));
+
+        System.out.println(storePhoneMap);
+
+        // Узнать все ли товары указанной категории можно доставить до покупателя
+        boolean allDelivery = products.stream()
+                .filter(product -> product.getCategory() == Category.CATEGORY1)
+                .allMatch(Product::isDelivery);
+
+        System.out.println("Can all products of CATEGORY1 be delivered? " + allDelivery);
+
+        // Посчитать количество магазинов
+        long storeCount = products.stream()
+                .flatMap(product -> product.getStores().stream())
+                .map(Store::getNumber)
+                .distinct()
+                .count();
+
+        System.out.println("Count number of stores: " + storeCount);
+
+        // Вывести товары отсортированные по стоимости (от большего к меньшему)
+        List<Product> sortedProducts = products.stream()
+                .sorted(Comparator.comparing(Product::getCost).reversed())
+                .toList();
+
+        sortedProducts.forEach(product -> System.out.println(product.getName() + " - " + product.getCost() + " RUB"));
     }
 }
