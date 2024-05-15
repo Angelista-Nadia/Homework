@@ -9,17 +9,12 @@ import jakarta.servlet.http.HttpServletResponse;
 public class DateServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String username = request.getParameter("username");
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
 
-        if (username != null && username.length() >= 5) {
-            request.getRequestDispatcher("/user").forward(request, response);
-        } else {
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
+        String dataResponse = "Date: " + new java.util.Date();
 
-            String dataResponse = "Date: " + new java.util.Date();
+        response.getWriter().write(dataResponse);
 
-            response.getWriter().write(dataResponse);
-        }
     }
 }
