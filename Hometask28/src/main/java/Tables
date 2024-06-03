@@ -1,0 +1,116 @@
+select * from hobbies;
+
+select name as username, birthdate, now() from persons;
+
+//удаление всех таблиц
+DROP TABLE persons, hobbies, types, person_hobby;
+
+//вывестии всех людей старше какого-либо возраста
+SELECT * FROM persons WHERE birthdate > '2006-01-01';
+
+//вывести информацию какое хобби активное, а какое пассивное
+SELECT hobby, n_t FROM hobbies
+    FULL JOIN types ON type_id = types.id;
+
+//вывести сколько людей каждого пола
+SELECT sex, COUNT(*) as order_count
+    FROM persons
+    GROUP BY sex;
+
+//вывести информацию о людях и их хобби
+SELECT name, sex, birthdate, hobby FROM persons
+    LEFT JOIN person_hobby ph on persons.id = ph.person_id
+    LEFT JOIN hobbies h on h.id = ph.hobby_id;
+
+//вывести список людей, у которых более одного хобби
+SELECT name, COUNT(hobby_id) AS hobby_count
+    FROM persons
+    LEFT JOIN person_hobby ph on persons.id = ph.person_id
+    GROUP BY person_id, name
+    HAVING COUNT(hobby_id) > 1;
+
+//вывести какое колличество пассивных и активных хобби
+SELECT
+    SUM(CASE WHEN n_t = 'active' THEN 1 ELSE 0 END) AS active_hobbies,
+    SUM(CASE WHEN n_t = 'passive' THEN 1 ELSE 0 END) AS passive_hobbies
+FROM
+    person_hobby
+JOIN types t on t.id = person_hobby.type_id;
+
+
+
+
+create table persons (
+    id int primary key,
+    name varchar,
+    sex varchar,
+    birthdate date
+);
+
+create table hobbies (
+    id int primary key,
+    hobby varchar
+);
+
+ALTER TABLE hobbies
+    ADD type_id int;
+
+create table types (
+    id int primary key,
+    n_t varchar
+);
+
+create table person_hobby (
+    id int primary key,
+    person_id int,
+    hobby_id int,
+    type_id int,
+    constraint person_fk foreign key (person_id) references persons (id),
+    constraint hobby_fk foreign key (hobby_id) references hobbies (id),
+    constraint type_fk foreign key (type_id) references types (id)
+);
+
+insert into persons (id, name, sex, birthdate)
+VALUES (1, 'user1', 'male', '1999-12-21'),
+       (2, 'user2', 'male', '2000-01-11'),
+       (3, 'user3', 'female', '1990-06-01'),
+       (4, 'user4', 'male', '2005-09-26'),
+       (5, 'user5', 'male', '1996-11-19'),
+       (6, 'user6', 'female', '2002-02-28'),
+       (7, 'user7', 'male', '2011-08-07'),
+       (8, 'user8', 'female', '1997-01-09'),
+       (9, 'user9', 'female', '1989-08-18'),
+       (10, 'user10', 'male', '2014-09-21');
+
+insert into types (id, n_t) VALUES (1, 'active'), (2, 'passive');
+
+insert into hobbies (id, hobby)
+VALUES (1, 'draw'),
+       (2, 'cook'),
+       (3, 'run'),
+       (4, 'football'),
+       (5, 'numismatics'),
+       (6, 'racing');
+
+DELETE FROM hobbies;
+
+insert into person_hobby (id, person_id, hobby_id, type_id)
+VALUES (1, 1, 6, 1),
+       (2, 1, 4, 1),
+       (3, 1, 1, 2),
+       (4, 1, 3, 1),
+       (5, 2, 4, 1),
+       (6, 3, 1, 2),
+       (7, 5, 3, 1),
+       (8, 5, 4, 1),
+       (9, 5, 6, 1),
+       (10, 6, 6, 1),
+       (11, 7, 1, 2),
+       (12, 7, 2, 2),
+       (13, 8, 3, 1),
+       (14, 8, 4, 1),
+       (15, 9, 5, 2),
+       (16, 9, 2, 2),
+       (17, 9, 6, 1),
+       (18, 10, 1, 2),
+       (19, 10, 4, 1);
