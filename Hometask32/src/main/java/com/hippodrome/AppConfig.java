@@ -1,16 +1,15 @@
 package com.hippodrome;
 
+import com.hippodrome.domain.Horse;
 import com.hippodrome.domain.User;
-import com.hippodrome.service.Hippodrome;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
-import java.util.Arrays;
-import java.util.List;
-
 @Configuration
 @EnableAspectJAutoProxy
+@ComponentScan(basePackages = "com.hippodrome")
 public class AppConfig {
 
     @Bean
@@ -19,12 +18,27 @@ public class AppConfig {
     }
 
     @Bean
-    public List<String> horses() {
-        return Arrays.asList("Horse1", "Horse2", "Horse3", "Horse4", "Horse5");
+    public Horse horse1() {
+        return new Horse("Horse1");
     }
 
     @Bean
-    public Hippodrome hippodrome() {
-        return new Hippodrome(horses(), user());
+    public Horse horse2() {
+        return new Horse("Horse2");
+    }
+
+    @Bean
+    public Horse horse3() {
+        return new Horse("Horse3");
+    }
+
+    @Bean
+    public Horse horse4() {
+        return new Horse("Horse4");
+    }
+
+    @Bean
+    public Horse horse5() {
+        return new Horse("Horse5");
     }
 }
