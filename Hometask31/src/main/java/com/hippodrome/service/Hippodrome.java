@@ -1,7 +1,7 @@
 package com.hippodrome.service;
 
+import com.hippodrome.domain.Horse;
 import com.hippodrome.domain.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,28 +11,40 @@ import java.util.Scanner;
 @Service
 public class Hippodrome {
 
-    @Autowired
-    private List<String> horses;
+    private final List<Horse> horses;
+    private final User user;
 
-    @Autowired
-    private User user;
+    public Hippodrome(List<Horse> horses, User user) {
+        this.horses = horses;
+        this.user = user;
+    }
 
-    public  void displayHorses() {
+    public void displayHorses() {
 
         Scanner scanner = new Scanner(System.in);
+        System.out.println("Welcome to Hippodrome!");
+        System.out.println("Your balance is: " + this.user.getBalance() + " RUB");
 
         while (user.getBalance() > 0) {
 
-            List<String> horses = this.horses;
+           // List<Horse> horses = this.horses;
             System.out.println("Horses in the race:");
-            for (String horse : horses) {
-                System.out.println("* " + horse);
+            for (Horse horse : horses) {
+                System.out.println("* " + horse.getName());
             }
 
             System.out.print("Enter the horse: ");
             String myHorse = scanner.next();
-            if (!horses.contains(myHorse)) {
-                System.out.println("Invalid horse!");
+            boolean validHorse = false;
+            for (Horse horse : horses) {
+                if (horse.getName().equals(myHorse)) {
+                    validHorse = true;
+                    break;
+                }
+            }
+
+            if (!validHorse) {
+                System.out.println("Invalid horse name. Please try again.");
                 continue;
             }
 
@@ -44,7 +56,7 @@ public class Hippodrome {
                 continue;
             }
 
-            String winningHorse = getWinHorse();
+            String winningHorse = getWinHorse().getName();
             System.out.println("The winning horse is: " + winningHorse);
 
             if (myHorse.equals(winningHorse)) {
@@ -61,7 +73,7 @@ public class Hippodrome {
         System.out.println("Game over.");
     }
 
-    private String getWinHorse() {
+    private Horse getWinHorse() {
         Random random = new Random();
         int index = random.nextInt(horses.size());
         return horses.get(index);
